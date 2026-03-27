@@ -1,16 +1,14 @@
-import 'package:flutter/foundation.dart'; // For debugPrint
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DBService {
-  // 1. Singleton Pattern: Ensures only one instance exists in the app
   static final DBService _instance = DBService._internal();
   factory DBService() => _instance;
   DBService._internal();
 
   static Database? _db;
 
-  // 2. Singleton Database Connection
   Future<Database> get database async {
     if (_db != null) return _db!;
     _db = await _initDB();
@@ -19,7 +17,7 @@ class DBService {
 
   Future<Database> _initDB() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'verbum.db'); // Kept filename to preserve your data
+    final path = join(dbPath, 'verbum.db'); 
 
     return await openDatabase(
       path,
@@ -35,7 +33,6 @@ class DBService {
         ''');
       },
       onUpgrade: (db, oldVersion, newVersion) async {
-        // Migration logic preserved for existing users
         if (oldVersion < 2) {
           await db.execute('ALTER TABLE favorites ADD COLUMN example TEXT');
         }
@@ -54,21 +51,15 @@ class DBService {
           'pronunciation': word['pronunciation'] ?? '',
           'example': word['example'] ?? '',
         },
-        conflictAlgorithm: ConflictAlgorithm.replace, // Overwrites if word exists
+        conflictAlgorithm: ConflictAlgorithm.replace, 
       );
     } catch (e) {
-      // Use debugPrint for development logs, silent in release
       debugPrint("Database Save Error: $e");
     }
   }
-
-  // === UPDATED FOR CHRONOLOGICAL ORDERING ===
   Future<List<Map<String, dynamic>>> getFavorites() async {
     try {
       final db = await database;
-      // FIX: Changed "word ASC" to "rowid DESC"
-      // rowid is a hidden auto-incrementing column in SQLite.
-      // DESC ensures the highest rowid (most recently saved) is returned first.
       return await db.query('favorites', orderBy: "rowid DESC"); 
     } catch (e) {
       debugPrint("Database Fetch Error: $e");
@@ -85,20 +76,15 @@ class DBService {
     }
   }
 
-  // === THE NEW METHOD ===
-  // Deletes all rows from the favorites table
   Future<void> clearAllFavorites() async {
     try {
       final db = await database;
-      // Passing only the table name deletes all its rows
       await db.delete('favorites');
       debugPrint("All favorites cleared.");
     } catch (e) {
       debugPrint("Database Clear All Error: $e");
     }
   }
-  
-  // New: Helper to close DB (good practice for app termination)
   Future<void> close() async {
     final db = await database;
     db.close();
