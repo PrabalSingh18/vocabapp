@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'db_service.dart';
 import 'word_detail_page.dart';
-// REMOVED: import 'constants.dart'; // - Fixed "unused_import"
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -186,7 +185,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
     );
   }
 
-  // REMOVED: _confirmOneDeleteDialog // - Fixed "unused_element"
 
   void _showClearAllDialog() {
     showDialog(
@@ -212,7 +210,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // FIXED: .withValues(alpha: 0.3) // - Fixed "deprecated_member_use"
           Icon(Icons.search_off_rounded, size: 64, color: Colors.grey.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(_searchController.text.isEmpty ? "Your list is empty" : "No matches found", 
