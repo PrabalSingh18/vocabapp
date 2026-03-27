@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // REQUIRED: For SystemChrome
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'login_page.dart';
 import 'audio_service.dart';
@@ -8,8 +8,6 @@ import 'theme_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // === FIX: HIDE SYSTEM BARS ===
-  // This prevents the phone's default bar from overlapping your app.
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   
   await AudioService.initAudio();
@@ -36,7 +34,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Verbum App',
 
-      // === DEFINE THE LIGHT THEME ===
       theme: ThemeData(
         brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(
@@ -47,7 +44,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      // === DEFINE THE DARK THEME ===
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSeed(
